@@ -24,9 +24,14 @@ exports.start = function(options, _onStarted) {
 
   app.use(compression());
 
+  // Set header to force download
+  function setHeaders (res, path) {
+      res.setHeader('X-Frame-Options', 'SAMEORIGIN')
+  }
+
   // First, check the file system
   directories.forEach(directory =>
-    app.use(serveStatic(directory, { extensions: ["html"] }))
+    app.use(serveStatic(directory, { extensions: ["html"], setHeaders: setHeaders}))
   );
 
   // Then, serve the fallback file
